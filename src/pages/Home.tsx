@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Card from '../components/Card'
 import Button from '../components/Button'
-import Chip from '../components/Chip'
 import Text from '../components/Text'
-import { GlobeIcon, ArrowIcon } from '../components/Icons'
+import { ArrowIcon } from '../components/Icons'
 import { useLanguage } from '../hooks/useLanguage'
 
 export function Home() {
   const navigate = useNavigate()
-  const { language, toggleLanguage, isRtl, t } = useLanguage()
+  const { language, isRtl, t } = useLanguage()
   
   const [isExplored, setIsExplored] = useState(false)
   const [systemTime, setSystemTime] = useState('')
@@ -30,24 +29,6 @@ export function Home() {
 
   return (
     <Card hoverable={true}>
-      {/* Top Header Row with Version Badge and Language Switcher */}
-      <div className={`flex items-center justify-between mb-8 pb-4 border-b border-slate-100/50 dark:border-white/5 ${isRtl ? 'flex-row-reverse' : 'flex-row'}`}>
-        <Chip dot={true} dotColor="teal">
-          {t('i18n_1')}
-        </Chip>
-
-        {/* Elegant Language Switcher Button */}
-        <Button 
-          variant="secondary" 
-          onClick={toggleLanguage}
-          className="py-1.5 px-4 text-xs rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95"
-          aria-label="Toggle Language"
-        >
-          <GlobeIcon size={14} />
-          {isRtl ? 'English' : 'العربية'}
-        </Button>
-      </div>
-
       {/* Main Hello World Title */}
       <Text variant="h1">
         {t('i18n_2')}

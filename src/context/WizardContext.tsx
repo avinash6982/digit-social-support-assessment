@@ -2,9 +2,29 @@
 import React, { createContext, useContext, useState } from 'react'
 
 export interface FormData {
-  personalInfo: string
-  familyFinancialInfo: string
-  situationDescription: string
+  // Step 1: Personal Information
+  name: string
+  nationalId: string
+  dob: string
+  gender: string
+  address: string
+  city: string
+  state: string
+  country: string
+  phone: string
+  email: string
+
+  // Step 2: Family & Financial Info
+  maritalStatus: string
+  dependents: string
+  employmentStatus: string
+  monthlyIncome: string
+  housingStatus: string
+
+  // Step 3: Situation Descriptions
+  currentFinancialSituation: string
+  employmentCircumstances: string
+  reasonForApplying: string
 }
 
 interface WizardContextType {
@@ -22,9 +42,24 @@ const WizardContext = createContext<WizardContextType | undefined>(undefined)
 export function WizardProvider({ children }: { children: React.ReactNode }) {
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<FormData>({
-    personalInfo: '',
-    familyFinancialInfo: '',
-    situationDescription: ''
+    name: '',
+    nationalId: '',
+    dob: '',
+    gender: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    phone: '',
+    email: '',
+    maritalStatus: '',
+    dependents: '',
+    employmentStatus: '',
+    monthlyIncome: '',
+    housingStatus: '',
+    currentFinancialSituation: '',
+    employmentCircumstances: '',
+    reasonForApplying: ''
   })
 
   const setStep = (step: number) => {
@@ -51,9 +86,24 @@ export function WizardProvider({ children }: { children: React.ReactNode }) {
   const resetForm = () => {
     setCurrentStep(1)
     setFormData({
-      personalInfo: '',
-      familyFinancialInfo: '',
-      situationDescription: ''
+      name: '',
+      nationalId: '',
+      dob: '',
+      gender: '',
+      address: '',
+      city: '',
+      state: '',
+      country: '',
+      phone: '',
+      email: '',
+      maritalStatus: '',
+      dependents: '',
+      employmentStatus: '',
+      monthlyIncome: '',
+      housingStatus: '',
+      currentFinancialSituation: '',
+      employmentCircumstances: '',
+      reasonForApplying: ''
     })
   }
 
