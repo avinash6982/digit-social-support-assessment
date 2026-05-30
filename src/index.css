@@ -1,27 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 /* ==========================================================================
    SUPPORT PORTAL - TAILWIND CORE & COSMIC FLOATING BACKGROUND
    ========================================================================== */
 
 :root {
-  /* Harmonious Color Palette - Ultra Modern Theme tokens */
-  --bg-primary: #090a16;
-  --primary: #6366f1; /* Indigo */
-  --secondary: #a855f7; /* Purple */
-  --tertiary: #14b8a6; /* Teal */
+  /* Harmonious Color Palette - Light Mode by default */
+  --bg-primary: #fafaff;
+  --bg-secondary: #f0f2ff;
+  --primary: #4f46e5; /* Indigo */
+  --secondary: #9333ea; /* Purple */
+  --tertiary: #0d9488; /* Teal */
   
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-primary: #fafaff;
-    --primary: #4f46e5;
-    --secondary: #9333ea;
-    --tertiary: #0d9488;
-  }
+.dark {
+  /* Ultra Modern Dark Mode variables */
+  --bg-primary: #090a16;
+  --bg-secondary: #111329;
+  --primary: #6366f1; /* Indigo */
+  --secondary: #a855f7; /* Purple */
+  --tertiary: #14b8a6; /* Teal */
 }
 
 /* Base resets & setup for floating animated gradient backdrop */
