@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import type { RootState } from '../store/store'
+import { toggleTheme } from '../store/settingsSlice'
 
 export function useTheme() {
-  // Theme state defaulting to saved preference or device theme preferences
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('theme')
-    if (saved === 'light' || saved === 'dark') return saved
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  })
+  const dispatch = useDispatch()
+  const theme = useSelector((state: RootState) => state.settings.theme)
 
   // Synchronize dynamic class additions to html element
   useEffect(() => {
@@ -15,16 +14,15 @@ export function useTheme() {
     } else {
       document.documentElement.classList.remove('dark')
     }
-    localStorage.setItem('theme', theme)
   }, [theme])
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme())
   }
 
   return {
     theme,
-    toggleTheme,
+    toggleTheme: handleToggleTheme,
     isDark: theme === 'dark'
   }
 }

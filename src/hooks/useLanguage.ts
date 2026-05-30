@@ -1,21 +1,32 @@
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import type { RootState } from '../store/store'
+import { toggleLanguage } from '../store/settingsSlice'
 
 export function useLanguage() {
+  const dispatch = useDispatch()
+  const language = useSelector((state: RootState) => state.settings.language)
   const { t, i18n } = useTranslation()
 
-  // Dynamic language/directionality toggler
-  const toggleLanguage = () => {
-    const nextLang = i18n.language === 'en' ? 'ar' : 'en'
-    i18n.changeLanguage(nextLang)
-    document.documentElement.dir = nextLang === 'ar' ? 'rtl' : 'ltr'
-    document.documentElement.lang = nextLang
+  // Synchronize language state with i18next and HTML elements
+  useEffect(() => {
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language)
+    }
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr'
+    document.documentElement.lang = language
+  }, [language, i18n])
+
+  const handleToggleLanguage = () => {
+    dispatch(toggleLanguage())
   }
 
-  const isRtl = i18n.language === 'ar'
+  const isRtl = language === 'ar'
 
   return {
-    language: i18n.language,
-    toggleLanguage,
+    language,
+    toggleLanguage: handleToggleLanguage,
     isRtl,
     t
   }
