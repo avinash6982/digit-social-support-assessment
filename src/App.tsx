@@ -4,6 +4,7 @@ import Card from './components/Card'
 import Button from './components/Button'
 import Chip from './components/Chip'
 import Text from './components/Text'
+import { GlobeIcon, ArrowIcon } from './components/Icons'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -50,20 +51,7 @@ function App() {
           className="py-1.5 px-4 text-xs rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95"
           aria-label="Toggle Language"
         >
-          <svg 
-            width="14" 
-            height="14" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-          </svg>
+          <GlobeIcon size={14} />
           {isRtl ? 'English' : 'العربية'}
         </Button>
       </div>
@@ -85,20 +73,10 @@ function App() {
         aria-label="Toggle Portal Exploration"
         className="active:scale-98"
         icon={
-          <svg 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
+          <ArrowIcon 
+            size={16}
             className={`transition-transform duration-300 ${isExplored ? (isRtl ? '-rotate-90' : 'rotate-90') : ''}`}
-          >
-            <path d={isRtl ? 'M19 12H5' : 'M5 12h14'}></path>
-            <path d={isRtl ? 'm12 19-7-7 7-7' : 'm12 5 7 7-7 7'}></path>
-          </svg>
+          />
         }
       >
         {isExplored ? t('i18n_5') : t('i18n_4')}
