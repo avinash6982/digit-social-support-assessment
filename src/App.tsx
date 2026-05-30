@@ -1,4 +1,8 @@
 import { useState, useEffect } from 'react'
+import Card from './components/Card'
+import Button from './components/Button'
+import Chip from './components/Chip'
+import Text from './components/Text'
 
 function App() {
   const [isExplored, setIsExplored] = useState(false)
@@ -18,98 +22,71 @@ function App() {
   }, [])
 
   return (
-    <div className="card-container">
+    <Card hoverable={true}>
       {/* Decorative Visual Badge */}
-      <div className="visual-badge">
-        <span className="pulse-dot" style={{
-          width: '8px',
-          height: '8px',
-          backgroundColor: 'var(--tertiary)',
-          borderRadius: '50%',
-          display: 'inline-block',
-          boxShadow: '0 0 10px var(--tertiary)',
-          animation: 'pulse 1.8s infinite'
-        }}></span>
+      <Chip dot={true} dotColor="teal" className="mb-6">
         Support Portal v1.0.0
-      </div>
+      </Chip>
 
       {/* Main Hello World Title */}
-      <h1>Hello World</h1>
+      <Text variant="h1">
+        Hello World
+      </Text>
       
       {/* Beautiful Interactive Subtitle */}
-      <p>
+      <Text variant="body">
         Welcome to your brand-new, ultra-clean React &amp; Vite application. The unwanted boilerplate has been fully swept away, and the system is ready for development.
-      </p>
+      </Text>
 
       {/* Modern Interactive Action Button */}
-      <button 
-        className="action-button" 
+      <Button 
+        variant="primary" 
         onClick={() => setIsExplored(!isExplored)}
         aria-label="Toggle Portal Exploration"
+        icon={
+          <svg 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            className="transition-transform duration-300"
+            style={{ transform: isExplored ? 'rotate(90deg)' : 'none' }}
+          >
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        }
       >
-        <span>{isExplored ? 'Portal Initialized' : 'Explore Support Portal'}</span>
-        <svg 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-          style={{ transform: isExplored ? 'rotate(90deg)' : 'none', transition: 'transform 0.3s ease' }}
-        >
-          <path d="M5 12h14"></path>
-          <path d="m12 5 7 7-7 7"></path>
-        </svg>
-      </button>
+        {isExplored ? 'Portal Initialized' : 'Explore Support Portal'}
+      </Button>
 
       {/* Dynamic explored panel */}
       {isExplored && (
-        <div style={{
-          marginTop: '24px',
-          padding: '16px',
-          background: 'rgba(20, 184, 166, 0.05)',
-          border: '1px dashed rgba(20, 184, 166, 0.3)',
-          borderRadius: '16px',
-          fontSize: '0.9rem',
-          color: 'var(--tertiary)',
-          animation: 'fadeIn 0.5s ease-out forwards',
-          textAlign: 'center'
-        }}>
+        <div className="mt-6 p-4 bg-teal-500/5 border border-dashed border-teal-500/30 rounded-2xl text-sm text-teal-500 dark:text-teal-400 text-center animate-[fadeIn_0.5s_ease-out_forwards]">
           💡 All systems operational. Your codebase is primed for high-performance features.
         </div>
       )}
 
       {/* Sub-card details section showcasing structural metrics */}
-      <div className="details-grid">
-        <div className="detail-item">
-          <span className="label">Status</span>
-          <span className="value" style={{ color: 'var(--tertiary)' }}>Ready</span>
+      <div className="mt-9 pt-6 border-t border-slate-200/50 dark:border-white/10 flex justify-around gap-4">
+        <div className="flex flex-col items-center gap-1">
+          <Text variant="label">Status</Text>
+          <Text variant="value" className="text-teal-500 dark:text-teal-400">Ready</Text>
         </div>
-        <div className="detail-item">
-          <span className="label">Environment</span>
-          <span className="value">Local</span>
+        <div className="flex flex-col items-center gap-1">
+          <Text variant="label">Environment</Text>
+          <Text variant="value">Local</Text>
         </div>
-        <div className="detail-item">
-          <span className="label">Active Time</span>
-          <span className="value">{systemTime || '--:--:--'}</span>
+        <div className="flex flex-col items-center gap-1">
+          <Text variant="label">Active Time</Text>
+          <Text variant="value">{systemTime || '--:--:--'}</Text>
         </div>
       </div>
-
-      {/* Inline styles for keyframe animations (keeping CSS contained & modular) */}
-      <style>{`
-        @keyframes pulse {
-          0% { transform: scale(0.9); opacity: 0.6; }
-          50% { transform: scale(1.2); opacity: 1; }
-          100% { transform: scale(0.9); opacity: 0.6; }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-    </div>
+    </Card>
   )
 }
 
