@@ -9,5 +9,15 @@
   "i18n_8": "Ready",
   "i18n_9": "Environment",
   "i18n_10": "Local",
-  "i18n_11": "Active Time"
+  "i18n_11": "Active Time",
+  "i18n_12": "Apply for Assistance",
+  "i18n_13": "Fill out the form below to submit a support request.",
+  "i18n_14": "Full Name",
+  "i18n_15": "Email Address",
+  "i18n_16": "Support Description",
+  "i18n_17": "Submit Request",
+  "i18n_18": "Go Back",
+  "i18n_19": "Request Submitted Successfully!",
+  "i18n_20": "Thank you for reaching out. Our team has received your ticket and will follow up shortly.",
+  "i18n_21": "Back to Portal Home"
 }
