@@ -1,43 +1,24 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import Card from './components/Card'
 import Button from './components/Button'
 import Chip from './components/Chip'
 import Text from './components/Text'
 import { GlobeIcon, ArrowIcon, SunIcon, MoonIcon } from './components/Icons'
+import { useTheme } from './hooks/useTheme'
+import { useLanguage } from './hooks/useLanguage'
 
 function App() {
-  const { t, i18n } = useTranslation()
+  const { theme, toggleTheme } = useTheme()
+  const { language, toggleLanguage, isRtl, t } = useLanguage()
+  
   const [isExplored, setIsExplored] = useState(false)
   const [systemTime, setSystemTime] = useState('')
-  
-  // Theme state defaulting to saved preference or device theme preferences
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('theme')
-    if (saved === 'light' || saved === 'dark') return saved
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  })
-
-  // Synchronize dynamic class additions to html element
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-    localStorage.setItem('theme', theme)
-  }, [theme])
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
 
   // Live premium clock indicator
   useEffect(() => {
     const updateTime = () => {
       const now = new Date()
-      // Adjust active clock display to respect language locale
-      const locale = i18n.language === 'ar' ? 'ar-EG' : 'en-US'
+      const locale = language === 'ar' ? 'ar-EG' : 'en-US'
       setSystemTime(
         now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: '2-digit' })
       )
@@ -45,17 +26,7 @@ function App() {
     updateTime()
     const timer = setInterval(updateTime, 1000)
     return () => clearInterval(timer)
-  }, [i18n.language])
-
-  // Dynamic language/directionality toggler
-  const handleLanguageToggle = () => {
-    const nextLang = i18n.language === 'en' ? 'ar' : 'en'
-    i18n.changeLanguage(nextLang)
-    document.documentElement.dir = nextLang === 'ar' ? 'rtl' : 'ltr'
-    document.documentElement.lang = nextLang
-  }
-
-  const isRtl = i18n.language === 'ar'
+  }, [language])
 
   return (
     <>
@@ -78,7 +49,7 @@ function App() {
           {/* Elegant Language Switcher Button */}
           <Button 
             variant="secondary" 
-            onClick={handleLanguageToggle}
+            onClick={toggleLanguage}
             className="py-1.5 px-4 text-xs rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95"
             aria-label="Toggle Language"
           >
