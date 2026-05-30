@@ -25,7 +25,7 @@ export function Button({
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
       {...props}
     >
-      <span>{children}</span>
+      {children}
       {icon && (
         <span className="transition-transform duration-300 group-hover:translate-x-1">
           {icon}
