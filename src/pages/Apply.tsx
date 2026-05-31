@@ -548,7 +548,6 @@ function ApplyContent() {
         suggestion={ai.suggestion}
         editedSuggestion={ai.editedSuggestion}
         error={ai.error}
-        lastInput=""
         onAccept={handleAIAccept}
         onEdit={ai.startEdit}
         onDiscard={ai.discard}
