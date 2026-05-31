@@ -59,6 +59,15 @@ function ApplyContent() {
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [hasSavedData, setHasSavedData] = useState(() => loadFormData() !== null)
 
+  const { register, trigger, getValues, watch, setValue, formState: { errors, isDirty: rhfIsDirty } } = useForm<FormData>({
+    mode: 'onTouched',
+    defaultValues: formData,
+  })
+
+  const ai = useAIAssist()
+
+  const hasUnsavedChanges = (isDirty || rhfIsDirty) && !isSubmitted && !submittedRef.current
+
   useEffect(() => {
     stepTitleRef.current?.focus()
   }, [currentStep])
@@ -66,27 +75,23 @@ function ApplyContent() {
   // Browser close / tab close / reload
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
-      if (isDirty && !isSubmitted) {
+      if (hasUnsavedChanges) {
         e.preventDefault()
         e.returnValue = ''
       }
     }
     window.addEventListener('beforeunload', handler)
     return () => window.removeEventListener('beforeunload', handler)
-  }, [isDirty, isSubmitted])
+  }, [hasUnsavedChanges])
 
   // React Router in-app navigation blocker
+  // submittedRef.current is read at navigation time (not closure-captured), so setting it
+  // to true before navigate() immediately unblocks navigation without waiting for a re-render.
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      isDirty && !isSubmitted && !submittedRef.current && currentLocation.pathname !== nextLocation.pathname
+      (isDirty || rhfIsDirty) && !isSubmitted && !submittedRef.current &&
+      currentLocation.pathname !== nextLocation.pathname
   )
-
-  const ai = useAIAssist()
-
-  const { register, trigger, getValues, watch, setValue, formState: { errors } } = useForm<FormData>({
-    mode: 'onTouched',
-    defaultValues: formData,
-  })
 
   const maritalStatus = watch('maritalStatus')
 
