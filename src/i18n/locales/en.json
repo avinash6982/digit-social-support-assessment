@@ -89,5 +89,16 @@
   "i18n_86": "Umm Al Quwain",
   "i18n_87": "Ras Al Khaimah",
   "i18n_88": "Fujairah",
-  "i18n_89": "United Arab Emirates"
+  "i18n_89": "United Arab Emirates",
+
+  "i18n_90": "AI Writing Assistant",
+  "i18n_91": "Generating suggestion...",
+  "i18n_92": "Suggested text",
+  "i18n_93": "Edit suggestion",
+  "i18n_94": "Accept",
+  "i18n_95": "Edit",
+  "i18n_96": "Discard",
+  "i18n_97": "Help me write",
+  "i18n_98": "Try again",
+  "i18n_99": "Failed to generate suggestion. Please try again."
 }
