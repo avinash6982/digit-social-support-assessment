@@ -75,7 +75,8 @@
   "i18n_73": "Date of birth must be in the past",
   "i18n_74": "Please enter a valid email address",
   "i18n_75": "Please enter a valid phone number",
-  "i18n_76": "Please provide more detail (minimum 20 characters)",
+  "i18n_76": "Please provide more detail (minimum 50 characters)",
   "i18n_77": "Must be 0 or more",
-  "i18n_78": "Must be at least 5 characters"
+  "i18n_78": "Must be at least 5 characters",
+  "i18n_79": "Applicant must be at least 18 years old"
 }

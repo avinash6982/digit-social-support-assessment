@@ -106,7 +106,15 @@ function ApplyContent() {
               error={errors.dob?.message}
               {...register('dob', {
                 required: t('i18n_70'),
-                validate: (v) => new Date(v) < new Date() || t('i18n_73'),
+                validate: (v) => {
+                  const dob = new Date(v)
+                  const today = new Date()
+                  const age = today.getFullYear() - dob.getFullYear()
+                  const hasBirthdayPassed =
+                    today.getMonth() > dob.getMonth() ||
+                    (today.getMonth() === dob.getMonth() && today.getDate() >= dob.getDate())
+                  return (age > 18 || (age === 18 && hasBirthdayPassed)) || t('i18n_79')
+                },
               })}
             />
             <FormSelect
@@ -234,7 +242,7 @@ function ApplyContent() {
               error={errors.currentFinancialSituation?.message}
               {...register('currentFinancialSituation', {
                 required: t('i18n_70'),
-                minLength: { value: 20, message: t('i18n_76') },
+                minLength: { value: 50, message: t('i18n_76') },
               })}
             />
             <FormTextarea
@@ -243,7 +251,7 @@ function ApplyContent() {
               error={errors.employmentCircumstances?.message}
               {...register('employmentCircumstances', {
                 required: t('i18n_70'),
-                minLength: { value: 20, message: t('i18n_76') },
+                minLength: { value: 50, message: t('i18n_76') },
               })}
             />
             <FormTextarea
@@ -252,7 +260,7 @@ function ApplyContent() {
               error={errors.reasonForApplying?.message}
               {...register('reasonForApplying', {
                 required: t('i18n_70'),
-                minLength: { value: 20, message: t('i18n_76') },
+                minLength: { value: 50, message: t('i18n_76') },
               })}
             />
           </div>
