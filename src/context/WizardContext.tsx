@@ -103,6 +103,7 @@ export function WizardProvider({ children }: { children: React.ReactNode }) {
 
   const saveProgress = (liveValues?: FormData) => {
     const dataToSave = liveValues ?? formData
+    // Sync context state with the live RHF values so both stay in agreement after saving
     if (liveValues) setFormData(liveValues)
     saveFormData({ ...dataToSave, currentStep })
     setIsDirty(false)
@@ -110,6 +111,7 @@ export function WizardProvider({ children }: { children: React.ReactNode }) {
 
   const clearProgress = () => {
     clearFormData()
+    // The in-memory form data is still present in RHF — keep dirty so the nav guard fires
     setIsDirty(true)
   }
 

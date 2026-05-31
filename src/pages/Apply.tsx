@@ -103,6 +103,7 @@ function ApplyContent() {
   const handleNext = async (e: React.FormEvent) => {
     e.preventDefault()
     const fields = stepFieldNames[currentStep as 1 | 2 | 3]
+    // Single applicants have no dependents by definition — skip that field's validation
     const activeFields = currentStep === 2 && maritalStatus === 'Single'
       ? fields.filter((f) => f !== 'dependents')
       : fields
@@ -120,7 +121,7 @@ function ApplyContent() {
 
     setIsSubmitting(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await new Promise((resolve) => setTimeout(resolve, 1500)) // deliberate delay so the spinner is visible
       submittedRef.current = true
       resetForm()
       navigate('/success')
