@@ -184,7 +184,7 @@ describe('useAIAssist', () => {
 
   it('aborts previous active request when open() is called sequentially', async () => {
     let firstSignal: AbortSignal | undefined
-    mockGetAISuggestion.mockImplementation(async (field, val, sig) => {
+    mockGetAISuggestion.mockImplementation(async (_field, val, sig) => {
       if (val === 'first') {
         firstSignal = sig
         return new Promise((resolve) => setTimeout(() => resolve('First Result'), 100))

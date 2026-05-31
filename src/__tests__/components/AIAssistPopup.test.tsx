@@ -16,7 +16,6 @@ const defaultProps = {
   suggestion: '',
   editedSuggestion: '',
   error: null,
-  lastInput: '',
   onAccept: jest.fn(),
   onEdit: jest.fn(),
   onDiscard: jest.fn(),

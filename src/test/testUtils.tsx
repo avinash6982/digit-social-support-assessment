@@ -4,10 +4,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
 import settingsReducer from '../store/settingsSlice'
 
-export function createTestStore(preloadedState?: { settings?: { theme: 'light' | 'dark'; language: 'en' | 'ar' } }) {
+export function createTestStore() {
   return configureStore({
     reducer: { settings: settingsReducer },
-    preloadedState,
   })
 }
 

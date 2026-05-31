@@ -9,7 +9,6 @@ interface AIAssistPopupProps {
   suggestion: string
   editedSuggestion: string
   error: string | null
-  lastInput: string
   onAccept: () => void
   onEdit: () => void
   onDiscard: () => void
@@ -22,7 +21,6 @@ export function AIAssistPopup({
   suggestion,
   editedSuggestion,
   error,
-  lastInput,
   onAccept,
   onEdit,
   onDiscard,
