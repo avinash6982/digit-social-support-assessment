@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import Home from './pages/Home'
 import Apply from './pages/Apply'
 import Success from './pages/Success'
@@ -7,8 +7,8 @@ import { SunIcon, MoonIcon, GlobeIcon } from './components/Icons'
 import { useTheme } from './hooks/useTheme'
 import { useLanguage } from './hooks/useLanguage'
 
-function AppContent() {
-  useScrollToTop() // Resets scroll position to top of window on route change
+function AppLayout() {
+  useScrollToTop()
 
   const { theme, toggleTheme } = useTheme()
   const { toggleLanguage, isRtl, t } = useLanguage()
@@ -62,22 +62,26 @@ function AppContent() {
 
       {/* Routed Pages Viewport */}
       <main id="main-content" className="pt-20 pb-8 px-4 flex items-center justify-center min-h-screen">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/apply" element={<Apply />} />
-          <Route path="/success" element={<Success />} />
-        </Routes>
+        <Outlet />
       </main>
     </>
   )
 }
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'apply', element: <Apply /> },
+      { path: 'success', element: <Success /> },
+    ],
+  },
+])
+
 function App() {
-  return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App

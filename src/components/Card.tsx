@@ -10,7 +10,7 @@ export function Card({ children, className = '', hoverable = true }: CardProps) 
   return (
     <div 
       className={`
-        relative w-full max-w-[580px] p-8 md:p-12 rounded-[32px] text-center overflow-hidden z-10
+        relative w-full max-w-[580px] p-6 md:p-8 rounded-[32px] text-center overflow-hidden z-10
         border border-white/10 dark:border-white/5 
         bg-white/70 dark:bg-[#111329]/50 backdrop-blur-3xl 
         shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7),0_0_50px_-10px_rgba(99,102,241,0.25)]
