@@ -7,10 +7,13 @@ import FormField from '../components/FormField'
 import FormSelect from '../components/FormSelect'
 import FormTextarea from '../components/FormTextarea'
 import UnsavedChangesModal from '../components/UnsavedChangesModal'
+import AIAssistPopup from '../components/AIAssistPopup'
 import { useLanguage } from '../hooks/useLanguage'
+import { useAIAssist } from '../hooks/useAIAssist'
 import { WizardProvider, useWizard } from '../context/WizardContext'
 import { loadFormData, clearFormData, getSavedAt } from '../utils/localStorage'
 import type { FormData } from '../context/WizardContext'
+import type { AIFieldName } from '../services/aiService'
 
 const stepFieldNames: Record<1 | 2 | 3, (keyof FormData)[]> = {
   1: ['name', 'nationalId', 'dob', 'gender', 'address', 'city', 'state', 'phone', 'email'],
@@ -36,6 +39,7 @@ function ApplyContent() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const stepTitleRef = useRef<HTMLSpanElement>(null)
+  const submittedRef = useRef(false)
 
   const maxDob = (() => {
     const d = new Date()
@@ -74,15 +78,22 @@ function ApplyContent() {
   // React Router in-app navigation blocker
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      isDirty && !isSubmitted && currentLocation.pathname !== nextLocation.pathname
+      isDirty && !isSubmitted && !submittedRef.current && currentLocation.pathname !== nextLocation.pathname
   )
 
-  const { register, trigger, getValues, watch, formState: { errors } } = useForm<FormData>({
+  const ai = useAIAssist()
+
+  const { register, trigger, getValues, watch, setValue, formState: { errors } } = useForm<FormData>({
     mode: 'onTouched',
     defaultValues: formData,
   })
 
   const maritalStatus = watch('maritalStatus')
+
+  const handleAIAccept = () => {
+    const value = ai.accept()
+    if (ai.activeField) setValue(ai.activeField, value, { shouldValidate: true })
+  }
 
   const handleNext = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -105,6 +116,7 @@ function ApplyContent() {
     setIsSubmitting(true)
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500))
+      submittedRef.current = true
       resetForm()
       navigate('/success')
     } finally {
@@ -392,33 +404,39 @@ function ApplyContent() {
             <fieldset className="border-0 p-0 m-0 min-w-0">
               <legend className="sr-only">{stepTitles[2]}</legend>
               <div className="flex flex-col gap-3 animate-[fadeIn_0.3s_ease-out_forwards]">
-                <FormTextarea
-                  id="currentFinancialSituation" label={t('i18n_64')} required
-                  rows={3} placeholder={t('i18n_65')}
-                  error={errors.currentFinancialSituation?.message}
-                  {...register('currentFinancialSituation', {
-                    required: t('i18n_70'),
-                    minLength: { value: 50, message: t('i18n_76') },
-                  })}
-                />
-                <FormTextarea
-                  id="employmentCircumstances" label={t('i18n_66')} required
-                  rows={3} placeholder={t('i18n_67')}
-                  error={errors.employmentCircumstances?.message}
-                  {...register('employmentCircumstances', {
-                    required: t('i18n_70'),
-                    minLength: { value: 50, message: t('i18n_76') },
-                  })}
-                />
-                <FormTextarea
-                  id="reasonForApplying" label={t('i18n_68')} required
-                  rows={3} placeholder={t('i18n_69')}
-                  error={errors.reasonForApplying?.message}
-                  {...register('reasonForApplying', {
-                    required: t('i18n_70'),
-                    minLength: { value: 50, message: t('i18n_76') },
-                  })}
-                />
+                {(
+                  [
+                    { id: 'currentFinancialSituation', labelKey: 'i18n_64', placeholderKey: 'i18n_65' },
+                    { id: 'employmentCircumstances',   labelKey: 'i18n_66', placeholderKey: 'i18n_67' },
+                    { id: 'reasonForApplying',         labelKey: 'i18n_68', placeholderKey: 'i18n_69' },
+                  ] as { id: AIFieldName; labelKey: string; placeholderKey: string }[]
+                ).map(({ id, labelKey, placeholderKey }) => (
+                  <div key={id} className="flex flex-col gap-1.5">
+                    <FormTextarea
+                      id={id} label={t(labelKey)} required
+                      rows={3} placeholder={t(placeholderKey)}
+                      error={errors[id]?.message}
+                      {...register(id, {
+                        required: t('i18n_70'),
+                        minLength: { value: 50, message: t('i18n_76') },
+                      })}
+                    />
+                    <div className={`flex ${isRtl ? 'justify-start' : 'justify-end'}`}>
+                      <button
+                        type="button"
+                        onClick={() => ai.open(id, getValues(id) ?? '')}
+                        disabled={ai.popupState !== 'closed'}
+                        className="flex items-center gap-1.5 text-xs font-semibold text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 rounded px-1"
+                        aria-label={`${t('i18n_97')} — ${t(labelKey)}`}
+                      >
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z" /><path d="M12 8v4l3 3" />
+                        </svg>
+                        {t('i18n_97')}
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </fieldset>
           )}
@@ -523,6 +541,20 @@ function ApplyContent() {
           </div>
         )}
       </Card>
+
+      {/* AI Assist Popup */}
+      <AIAssistPopup
+        state={ai.popupState}
+        suggestion={ai.suggestion}
+        editedSuggestion={ai.editedSuggestion}
+        error={ai.error}
+        lastInput=""
+        onAccept={handleAIAccept}
+        onEdit={ai.startEdit}
+        onDiscard={ai.discard}
+        onEditChange={ai.handleEditChange}
+        onRetry={() => ai.retry(ai.activeField ? getValues(ai.activeField) ?? '' : '')}
+      />
 
       {/* Unsaved Changes Modal */}
       {blocker.state === 'blocked' && (
