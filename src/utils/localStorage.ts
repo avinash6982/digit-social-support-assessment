@@ -2,6 +2,7 @@ import CryptoJS from 'crypto-js'
 
 const STORAGE_KEY = 'spf-form-data'
 
+// Fallback is intentionally weak — VITE_STORAGE_ENCRYPTION_KEY must be set in production
 const getKey = (): string =>
   import.meta.env.VITE_STORAGE_ENCRYPTION_KEY ?? 'fallback-dev-key'
 
@@ -26,6 +27,7 @@ export const loadFormData = (): { data: unknown; savedAt: string } | null => {
     if (!plaintext) return null
     return JSON.parse(plaintext)
   } catch {
+    // Corrupted ciphertext can never be recovered; wipe it so the restore banner disappears
     clearFormData()
     return null
   }

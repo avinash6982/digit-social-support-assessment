@@ -11,6 +11,7 @@ import {
 } from 'redux-persist'
 import settingsReducer from './settingsSlice'
 
+// redux-persist requires an async storage interface even though localStorage is synchronous
 const customStorage = {
   getItem: (key: string): Promise<string | null> => {
     if (typeof window !== 'undefined') {

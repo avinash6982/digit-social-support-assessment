@@ -23,6 +23,7 @@ export async function getAISuggestion(
   signal?: AbortSignal
 ): Promise<string> {
   if (import.meta.env.VITE_USE_MOCK_AI === 'true') {
+    // Mirror real fetch abort behaviour: reject with AbortError so callers handle it identically
     await new Promise((resolve, reject) => {
       const timer = setTimeout(resolve, 1500)
       signal?.addEventListener('abort', () => { clearTimeout(timer); reject(new DOMException('Aborted', 'AbortError')) })
