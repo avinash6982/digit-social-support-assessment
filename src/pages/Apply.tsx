@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Card from '../components/Card'
@@ -21,25 +21,40 @@ function ApplyContent() {
   const { isRtl, t } = useLanguage()
   const { currentStep, formData, updateFormData, nextStep, prevStep, resetForm } = useWizard()
 
-  const { register, trigger, getValues, formState: { errors } } = useForm<FormData>({
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const { register, trigger, getValues, watch, formState: { errors } } = useForm<FormData>({
     mode: 'onTouched',
     defaultValues: formData,
   })
 
+  const maritalStatus = watch('maritalStatus')
+
   const handleNext = async (e: React.FormEvent) => {
     e.preventDefault()
     const fields = stepFieldNames[currentStep as 1 | 2 | 3]
-    const valid = await trigger(fields)
+    const activeFields = currentStep === 2 && maritalStatus === 'Single'
+      ? fields.filter((f) => f !== 'dependents')
+      : fields
+
+    const valid = await trigger(activeFields)
     if (!valid) return
 
     const values = getValues()
-    fields.forEach((key) => updateFormData(key, values[key]))
+    activeFields.forEach((key) => updateFormData(key, values[key]))
 
     if (currentStep < 3) {
       nextStep()
-    } else {
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
       resetForm()
       navigate('/success')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -189,15 +204,17 @@ function ApplyContent() {
               <option value="Divorced" className={optionClasses}>{t('i18n_45')}</option>
               <option value="Widowed" className={optionClasses}>{t('i18n_46')}</option>
             </FormSelect>
-            <FormField
-              id="dependents" label={t('i18n_47')} type="number" min="0"
-              placeholder={t('i18n_48')}
-              error={errors.dependents?.message}
-              {...register('dependents', {
-                required: t('i18n_70'),
-                min: { value: 0, message: t('i18n_77') },
-              })}
-            />
+            {maritalStatus && maritalStatus !== 'Single' && (
+              <FormField
+                id="dependents" label={t('i18n_47')} type="number" min="0"
+                placeholder={t('i18n_48')}
+                error={errors.dependents?.message}
+                {...register('dependents', {
+                  required: t('i18n_70'),
+                  min: { value: 0, message: t('i18n_77') },
+                })}
+              />
+            )}
             <FormSelect
               id="employmentStatus" label={t('i18n_49')}
               error={errors.employmentStatus?.message}
@@ -270,10 +287,16 @@ function ApplyContent() {
         <div className={`flex flex-col sm:flex-row gap-4 mt-6 ${isRtl ? 'sm:flex-row-reverse' : ''}`}>
           <Button
             variant="primary" type="submit"
+            disabled={isSubmitting}
             aria-label={currentStep === 3 ? 'Submit Request' : 'Next Step'}
-            className="flex-1 justify-center active:scale-98"
+            className="flex-1 justify-center active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           >
-            {currentStep === 3
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                {t('i18n_80')}
+              </span>
+            ) : currentStep === 3
               ? (isRtl ? 'إرسال الطلب' : 'Submit Request')
               : (isRtl ? 'الخطوة التالية' : 'Next Step')}
           </Button>
