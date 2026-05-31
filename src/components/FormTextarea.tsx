@@ -13,6 +13,8 @@ const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
     const { isRtl } = useLanguage()
     const textAlign = isRtl ? 'text-right' : 'text-left'
 
+    const errorId = `${id}-error`
+
     return (
       <div className="flex flex-col gap-1.5 text-left">
         <label htmlFor={id} className={`${labelClasses} ${textAlign}`}>{label}</label>
@@ -21,8 +23,10 @@ const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
           id={id}
           className={`${inputClasses} ${textAlign} resize-none${error ? ` ${inputErrorClasses}` : ''}${className ? ` ${className}` : ''}`}
           {...props}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
         />
-        {error && <p className={errorMsgClasses}>{error}</p>}
+        {error && <p id={errorId} role="alert" className={errorMsgClasses}>{error}</p>}
       </div>
     )
   }
